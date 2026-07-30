@@ -1,26 +1,26 @@
-# WorldWeaver
+# WorldWeaver 🌐🕸️
 
-**Un sistema multiagente para la generación automática de mundos virtuales 3D interactivos a partir de texto.**
+**A multi-agent system for the automatic generation of interactive 3D virtual worlds from text.**
 
-WorldWeaver transforma un relato en lenguaje natural en un entorno tridimensional navegable y reactivo, ejecutable directamente en el navegador. A partir de un texto, un *pipeline* de agentes basados en modelos de lenguaje (orquestado con LangGraph) segmenta la narrativa en escenas, las puebla con modelos 3D, les da lógica de interacción y ambientación sonora, y lo compila todo en un documento HTML autocontenido.
+WorldWeaver transforms a natural language narrative into a navigable and reactive 3D environment that runs directly in the browser. Given a text input, a pipeline of language-model-based agents (orchestrated with LangGraph) segments the story into scenes, populates them with 3D models, adds interaction logic and ambient sound, and compiles everything into a self-contained HTML document.
 
-Este repositorio acompaña al Trabajo Fin de Máster homónimo (Máster Universitario en Inteligencia Artificial Aplicada, Universidad Carlos III de Madrid, 2025-2026).
+This repository accompanies the Master's Thesis of the same name (*Master's Degree in Applied Artificial Intelligence, Universidad Carlos III de Madrid, 2025–2026*).
 
-## Características
+## Features
 
-- **Pipeline multiagente** de seis agentes: Organizador → Director → Constructor → Programador → Músico → Ensamblador (más un **Examinador** en modo educativo), con validación semántica y reparación determinista entre etapas.
-- **Dos modos de operación**: *narrativo* (exploración e inmersión) y *educativo* (contenido didáctico + cuestionario final de evaluación).
-- **Bilingüe**: generación de mundos en español o inglés.
-- **Visor 3D autocontenido**: cada mundo es un único archivo HTML que se abre en cualquier navegador moderno (Three.js / WebGL), sin instalación.
+* **Multi-agent pipeline** consisting of six agents: Organizer → Director → Builder → Programmer → Musician → Assembler (plus an **Examiner** in educational mode), with semantic validation and deterministic repair between stages.
+* **Two operating modes**: *narrative* (exploration and immersion) and *educational* (learning content + final assessment questionnaire).
+* **Bilingual generation**: worlds can be generated in Spanish or English.
+* **Self-contained 3D viewer**: each world is a single HTML file that runs in any modern browser (Three.js / WebGL), with no installation required.
 
-## Requisitos
+## Requirements
 
-- Python 3.11 o superior.
-- Tres claves de API para generar mundos nuevos: un proveedor LLM, [Poly Pizza](https://poly.pizza/) (modelos 3D) y [Freesound](https://freesound.org/) (audio). Poly Pizza y Freesound son gratuitas; el LLM puede sustituirse por un modelo local gratuito ([Ollama](https://ollama.com/)). **Para solo explorar los mundos de ejemplo ya incluidos no hace falta ninguna clave.**
+* Python 3.11 or higher.
+* Three API keys are required to generate new worlds: an LLM provider, [Poly Pizza](https://poly.pizza/) (3D models), and [Freesound](https://freesound.org/) (audio). Poly Pizza and Freesound are free; the LLM can be replaced with a free local model ([Ollama](https://ollama.com/)). **API keys are not required to explore the included example worlds.**
 
-## Puesta en marcha
+## Getting Started
 
-**1. Clona el repositorio e instala las dependencias:**
+**1. Clone the repository and install dependencies:**
 
 ```bash
 git clone https://github.com/aliipz/The_WorldWeaver.git
@@ -28,73 +28,74 @@ cd WorldWeaver
 pip install -r worldweaver/requirements.txt
 ```
 
-**2. Configura las claves de API.** Copia la plantilla y rellena tus claves:
+**2. Configure the API keys.** Copy the template file and add your credentials:
 
 ```bash
 cp worldweaver/.env.example worldweaver/.env
-# edita worldweaver/.env
+# edit worldweaver/.env
 ```
 
-| Variable (`worldweaver/.env`) | Servicio | Cómo obtenerla |
-|---|---|---|
-| `MERCURY_API_KEY` | Proveedor LLM — [Mercury 2 (Inception Labs)](https://www.inceptionlabs.ai/) | Crea una cuenta en la plataforma y genera una clave de API. *(Alternativa sin clave: ejecuta un modelo local con [Ollama](https://ollama.com/) y rellena `OLLAMA_*` en su lugar.)* |
-| `POLYPIZZA_API_KEY` | [Poly Pizza](https://poly.pizza/) — modelos 3D | Regístrate gratis y copia tu clave desde los ajustes de la cuenta (apartado API). |
-| `FREESOUND_API_KEY` | [Freesound](https://freesound.org/) — audio ambiental | Regístrate gratis y solicita una credencial en [freesound.org/apiv2/apply](https://freesound.org/apiv2/apply/). |
+| Variable (`worldweaver/.env`) | Service                                                                    | How to obtain it                                                                                                                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MERCURY_API_KEY`             | LLM provider — [Mercury 2 (Inception Labs)](https://www.inceptionlabs.ai/) | Create an account on the platform and generate an API key. *(Keyless alternative: run a local model with [Ollama](https://ollama.com/) and configure `OLLAMA_*` variables instead.)* |
+| `POLYPIZZA_API_KEY`           | [Poly Pizza](https://poly.pizza/) — 3D models                              | Register for free and copy your API key from the account settings (API section).                                                                                                     |
+| `FREESOUND_API_KEY`           | [Freesound](https://freesound.org/) — ambient audio                        | Register for free and request credentials at [freesound.org/apiv2/apply](https://freesound.org/apiv2/apply/).                                                                        |
 
-> Sin claves el sistema sigue arrancando: podrás navegar los mundos de ejemplo, pero no generar nuevos (las llamadas a los servicios externos fallarán). El audio de respaldo y los personajes vienen incluidos, así que un mundo generado siempre tiene sonido y figuras aunque Freesound o Poly Pizza no respondan.
+> Without API keys, the system still starts: you can browse the example worlds, but you cannot generate new ones (external service requests will fail). Backup audio and character assets are included, so generated worlds always contain sound and figures even if Freesound or Poly Pizza are unavailable.
 
-## Ejecución
+## Running the Application
 
-El sistema admite tres formas de uso sobre el mismo núcleo:
+The system provides three ways to use the same core functionality:
 
-**1. Servidor web (recomendado).** Arranca la interfaz local:
+**1. Web server (recommended).** Start the local interface:
 
 ```bash
 cd worldweaver
 uvicorn server:app --port 8000
-# abre http://localhost:8000
+# open http://localhost:8000
 ```
 
-**2. Por consola** (generación desatendida):
+**2. Command line** (unattended generation):
 
 ```bash
-python worldweaver/tests/test_total.py texto.txt mi_mundo
+python worldweaver/tests/test_total.py text.txt my_world
 ```
 
-**3. Aplicación de escritorio.** `python launch.py` arranca el servidor y abre el navegador en modo app. Para distribuir como ejecutable autónomo:
+**3. Desktop application.** Running `python launch.py` starts the server and opens the browser in app mode. To package it as a standalone executable:
 
 ```bash
 cd worldweaver
 python -m PyInstaller worldweaver.spec --noconfirm
 ```
 
-Los mundos generados se escriben en `worldweaver/outputs/<nombre>/` como HTML autocontenido.
+Generated worlds are stored in `worldweaver/outputs/<name>/` as self-contained HTML files.
 
-## Estructura del proyecto
+## Project Structure
 
 ```
 worldweaver/
-  agents/      Los seis agentes especializados del pipeline
-  config/      Configuración, prompts (ES/EN) y geometría del escenario
-  schemas/     Esquemas Pydantic (contrato entre agentes)
-  pipeline/    Grafo LangGraph, estado compartido, validadores, ensamblador
-  sandbox/     Plantilla del visor 3D (Three.js) + assets (Quaternius, música)
-  server.py    Servidor FastAPI + landing
-  fixtures/    Textos de entrada de ejemplo
-  outputs/     Mundos de ejemplo generados (de la evaluación)
-metricas/      Datos brutos de la evaluación técnica
+  agents/      The six specialized agents in the pipeline
+  config/      Configuration, prompts (ES/EN), and scene geometry
+  schemas/     Pydantic schemas (agent communication contracts)
+  pipeline/    LangGraph workflow, shared state, validators, assembler
+  sandbox/     3D viewer template (Three.js) + assets (Quaternius, music)
+  server.py    FastAPI server + landing page
+  fixtures/    Example input texts
+  outputs/     Example generated worlds (from evaluation)
+metricas/      Raw technical evaluation data
 ```
 
-## Mundos de ejemplo y evaluación
+## Example Worlds and Evaluation
 
-La carpeta `worldweaver/outputs/` incluye los mundos utilizados en la evaluación del TFM (sus textos fuente están en `worldweaver/fixtures/`). Los datos brutos de la evaluación técnica se encuentran en `metricas/`.
+The `worldweaver/outputs/` folder contains the worlds used in the Master's Thesis evaluation (their source texts are located in `worldweaver/fixtures/`). Raw technical evaluation data can be found in `metricas/`.
 
-## Licencia
+## License
 
-El **código** se publica bajo licencia **MIT** (ver [`LICENSE`](LICENSE)).
+The **code** is released under the **MIT License** (see [`LICENSE`](LICENSE)).
 
-Los **recursos de terceros** conservan sus propias licencias: los personajes Quaternius y los paisajes sonoros de respaldo son CC0; los modelos de Poly Pizza y el audio de Freesound recuperados en tiempo de ejecución se rigen por la licencia de cada recurso.
+**Third-party resources** retain their own licenses: Quaternius characters and backup soundscapes are CC0; Poly Pizza models and Freesound audio retrieved at runtime are governed by the license of each individual resource.
 
-## Autoría
+## Authorship
 
-Alicia Pina Zapata — Trabajo Fin de Máster, Universidad Carlos III de Madrid (2025-2026). Tutor: Andrea Bellucci.
+Alicia Pina Zapata — Master's Thesis, Universidad Carlos III de Madrid (2025–2026).
+Supervisor: Andrea Bellucci.
